@@ -1,9 +1,5 @@
 package br.com.lelis.math;
 
-import br.com.lelis.converters.NumberConverter;
-import br.com.lelis.exceptions.UnsupportedMathOperationException;
-import org.springframework.web.bind.annotation.RequestMethod;
-
 public class SimpleMath {
 
     public Double sum(Double numberOne, Double numberTwo){
