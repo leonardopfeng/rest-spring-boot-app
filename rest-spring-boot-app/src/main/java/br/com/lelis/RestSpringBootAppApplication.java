@@ -1,4 +1,4 @@
-package br.com.lelis.restspringbootapp;
+package br.com.lelis;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

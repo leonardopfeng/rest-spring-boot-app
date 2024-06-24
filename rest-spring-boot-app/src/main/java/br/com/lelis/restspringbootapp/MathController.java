@@ -17,12 +17,12 @@ public class MathController {
     public Double sum(
             @PathVariable(value = "numberOne") String numberOne,
             @PathVariable(value = "numberTwo") String numberTwo
-            )throws Exception{
+    ) throws Exception {
 
-        if(!NumberConverter.isNumeric(numberOne) || !NumberConverter.isNumeric(numberTwo)) {
+        if (!NumberConverter.isNumeric(numberOne) || !NumberConverter.isNumeric(numberTwo)) {
             throw new UnsupportedMathOperationException("Please set a numeric value");
         }
-        return  math.sum(NumberConverter.convertToDouble(numberOne) , NumberConverter.convertToDouble(numberTwo));
+        return math.sum(NumberConverter.convertToDouble(numberOne), NumberConverter.convertToDouble(numberTwo));
     }
 
     @RequestMapping(value = "/subtraction/{numberOne}/{numberTwo}",
@@ -30,12 +30,12 @@ public class MathController {
     public Double subtraction(
             @PathVariable(value = "numberOne") String numberOne,
             @PathVariable(value = "numberTwo") String numberTwo
-    )throws Exception{
+    ) throws Exception {
 
-        if(!NumberConverter.isNumeric(numberOne) || !NumberConverter.isNumeric(numberTwo)) {
+        if (!NumberConverter.isNumeric(numberOne) || !NumberConverter.isNumeric(numberTwo)) {
             throw new UnsupportedMathOperationException("Please set a numeric value");
         }
-        return  math.subtraction(NumberConverter.convertToDouble(numberOne) , NumberConverter.convertToDouble(numberTwo));
+        return math.subtraction(NumberConverter.convertToDouble(numberOne), NumberConverter.convertToDouble(numberTwo));
     }
 
     @RequestMapping(value = "/multiplication/{numberOne}/{numberTwo}",
@@ -43,25 +43,25 @@ public class MathController {
     public Double multiplication(
             @PathVariable(value = "numberOne") String numberOne,
             @PathVariable(value = "numberTwo") String numberTwo
-    )throws Exception{
+    ) throws Exception {
 
-        if(!NumberConverter.isNumeric(numberOne) || !NumberConverter.isNumeric(numberTwo)) {
+        if (!NumberConverter.isNumeric(numberOne) || !NumberConverter.isNumeric(numberTwo)) {
             throw new UnsupportedMathOperationException("Please set a numeric value");
         }
-        return  math.multiplication(NumberConverter.convertToDouble(numberOne) , NumberConverter.convertToDouble(numberTwo));
+        return math.multiplication(NumberConverter.convertToDouble(numberOne), NumberConverter.convertToDouble(numberTwo));
     }
-    
+
     @RequestMapping(value = "/division/{numberOne}/{numberTwo}",
             method = RequestMethod.GET)
     public Double division(
             @PathVariable(value = "numberOne") String numberOne,
             @PathVariable(value = "numberTwo") String numberTwo
-    )throws Exception{
+    ) throws Exception {
 
-        if(!NumberConverter.isNumeric(numberOne) || !NumberConverter.isNumeric(numberTwo)) {
+        if (!NumberConverter.isNumeric(numberOne) || !NumberConverter.isNumeric(numberTwo)) {
             throw new UnsupportedMathOperationException("Please set a numeric value");
         }
-        return  math.division(NumberConverter.convertToDouble(numberOne) , NumberConverter.convertToDouble(numberTwo));
+        return math.division(NumberConverter.convertToDouble(numberOne), NumberConverter.convertToDouble(numberTwo));
     }
 
     @RequestMapping(value = "/mean/{numberOne}/{numberTwo}",
@@ -69,24 +69,24 @@ public class MathController {
     public Double mean(
             @PathVariable(value = "numberOne") String numberOne,
             @PathVariable(value = "numberTwo") String numberTwo
-    )throws Exception{
+    ) throws Exception {
 
-        if(!NumberConverter.isNumeric(numberOne) || !NumberConverter.isNumeric(numberTwo)) {
+        if (!NumberConverter.isNumeric(numberOne) || !NumberConverter.isNumeric(numberTwo)) {
             throw new UnsupportedMathOperationException("Please set a numeric value");
         }
-        return  math.mean(NumberConverter.convertToDouble(numberOne) , NumberConverter.convertToDouble(numberTwo));
+        return math.mean(NumberConverter.convertToDouble(numberOne), NumberConverter.convertToDouble(numberTwo));
     }
 
     @RequestMapping(value = "/sqrt/{number}",
             method = RequestMethod.GET)
     public Double sqrt(
             @PathVariable(value = "number") String number
-    )throws Exception{
+    ) throws Exception {
 
-        if(!NumberConverter.isNumeric(number)) {
+        if (!NumberConverter.isNumeric(number)) {
             throw new UnsupportedMathOperationException("Please set a numeric value");
         }
-        return  math.sqrt(NumberConverter.convertToDouble(number));
+        return math.sqrt(NumberConverter.convertToDouble(number));
     }
 
 }
