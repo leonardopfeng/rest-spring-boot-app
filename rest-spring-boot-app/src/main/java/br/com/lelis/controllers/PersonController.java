@@ -19,34 +19,67 @@ public class PersonController {
     private PersonServices service;
 
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(produces = {
+            br.com.lelis.util.MediaType.APPLICATION_JSON,
+            br.com.lelis.util.MediaType.APPLICATION_XML,
+            br.com.lelis.util.MediaType.APPLICATION_YML
+    }
+    )
     public List<PersonVO> findAll() {
         return service.findAll();
     }
 
     @GetMapping(value = "/{id}",
-            produces = MediaType.APPLICATION_JSON_VALUE)
+            produces = {
+                    br.com.lelis.util.MediaType.APPLICATION_JSON,
+                    br.com.lelis.util.MediaType.APPLICATION_XML,
+                    br.com.lelis.util.MediaType.APPLICATION_YML
+            })
     public PersonVO findById(@PathVariable(value = "id") Long id) {
         return service.findById(id);
     }
 
     @PostMapping(
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+            consumes = {
+                    br.com.lelis.util.MediaType.APPLICATION_JSON,
+                    br.com.lelis.util.MediaType.APPLICATION_XML,
+                    br.com.lelis.util.MediaType.APPLICATION_YML
+            },
+            produces = {
+                    br.com.lelis.util.MediaType.APPLICATION_JSON,
+                    br.com.lelis.util.MediaType.APPLICATION_XML,
+                    br.com.lelis.util.MediaType.APPLICATION_YML
+            })
     public PersonVO create(@RequestBody PersonVO person) {
         return service.create(person);
     }
 
     @PostMapping(value = "/v2",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+            consumes = {
+                    br.com.lelis.util.MediaType.APPLICATION_JSON,
+                    br.com.lelis.util.MediaType.APPLICATION_XML,
+                    br.com.lelis.util.MediaType.APPLICATION_YML
+            },
+            produces = {
+                    br.com.lelis.util.MediaType.APPLICATION_JSON,
+                    br.com.lelis.util.MediaType.APPLICATION_XML,
+                    br.com.lelis.util.MediaType.APPLICATION_YML
+            })
     public PersonVOV2 createV2(@RequestBody PersonVOV2 person) {
         return service.createV2(person);
     }
 
     @PutMapping(
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+            consumes = {
+                    br.com.lelis.util.MediaType.APPLICATION_JSON,
+                    br.com.lelis.util.MediaType.APPLICATION_XML,
+                    br.com.lelis.util.MediaType.APPLICATION_YML
+            },
+            produces = {
+                    br.com.lelis.util.MediaType.APPLICATION_JSON,
+                    br.com.lelis.util.MediaType.APPLICATION_XML,
+                    br.com.lelis.util.MediaType.APPLICATION_YML
+            })
     public PersonVO update(@RequestBody PersonVO person) {
         return service.update(person);
     }
