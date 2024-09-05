@@ -16,6 +16,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,6 +43,44 @@ class PersonServicesTest {
 
     @Test
     void findAll() {
+        List<Person> list = input.mockEntityList();
+
+        when(repository.findAll()).thenReturn(list);
+
+        var people = service.findAll();
+
+        assertNotNull(people);
+        assertEquals(14, people.size());
+
+        var PersonOne = people.get(1);
+        assertNotNull(PersonOne);
+        assertNotNull(PersonOne.getKey());
+        assertNotNull(PersonOne.getLinks());
+        assertTrue(PersonOne.toString().contains("links: [</api/person/v1/1>;rel=\"self\"]"));
+        assertEquals("First Name Test1", PersonOne.getFirstName());
+        assertEquals("Last Name Test1", PersonOne.getLastName());
+        assertEquals("Address Test1", PersonOne.getAddress());
+        assertEquals("Female", PersonOne.getGender());
+
+        var PersonFour = people.get(4);
+        assertNotNull(PersonFour);
+        assertNotNull(PersonFour.getKey());
+        assertNotNull(PersonFour.getLinks());
+        assertTrue(PersonFour.toString().contains("links: [</api/person/v1/4>;rel=\"self\"]"));
+        assertEquals("First Name Test4", PersonFour.getFirstName());
+        assertEquals("Last Name Test4", PersonFour.getLastName());
+        assertEquals("Address Test4", PersonFour.getAddress());
+        assertEquals("Male", PersonFour.getGender());
+
+        var PersonSeven = people.get(7);
+        assertNotNull(PersonSeven);
+        assertNotNull(PersonSeven.getKey());
+        assertNotNull(PersonSeven.getLinks());
+        assertTrue(PersonSeven.toString().contains("links: [</api/person/v1/7>;rel=\"self\"]"));
+        assertEquals("First Name Test7", PersonSeven.getFirstName());
+        assertEquals("Last Name Test7", PersonSeven.getLastName());
+        assertEquals("Address Test7", PersonSeven.getAddress());
+        assertEquals("Female", PersonSeven.getGender());
     }
 
     @Test
