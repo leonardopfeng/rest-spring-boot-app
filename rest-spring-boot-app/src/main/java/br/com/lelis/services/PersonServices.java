@@ -23,7 +23,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Service
 public class PersonServices {
 
-
     private Logger logger = Logger.getLogger(PersonServices.class.getName());
 
     @Autowired
