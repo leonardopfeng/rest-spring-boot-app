@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import br.com.lelis.controllers.PersonController;
 import br.com.lelis.data.vo.PersonVO;
 import br.com.lelis.data.vo.v2.PersonVOV2;
+import br.com.lelis.exceptions.RequiredObjectIsNullException;
 import br.com.lelis.exceptions.ResourceNotFoundException;
 import br.com.lelis.mapper.DozerMapper;
 import br.com.lelis.mapper.custom.PersonMapper;
@@ -56,6 +57,7 @@ public class PersonServices {
     }
 
     public PersonVO create(PersonVO person) {
+        if (person == null) throw new RequiredObjectIsNullException();
 
         logger.info("Creating one person!");
 
@@ -80,6 +82,7 @@ public class PersonServices {
     }
 
     public PersonVO update(PersonVO person) {
+        if (person == null) throw new RequiredObjectIsNullException();
 
         logger.info("Updating one person!");
 

@@ -1,6 +1,7 @@
 package br.com.lelis.unittests.mockito.services;
 
 import br.com.lelis.data.vo.PersonVO;
+import br.com.lelis.exceptions.RequiredObjectIsNullException;
 import br.com.lelis.model.Person;
 import br.com.lelis.repositories.PersonRepository;
 import br.com.lelis.services.PersonServices;
@@ -86,6 +87,16 @@ class PersonServicesTest {
     }
 
     @Test
+    void createWithNullPerson() {
+        Exception exception = assertThrows(RequiredObjectIsNullException.class, () -> {
+            service.create(null);
+        });
+        String expectedMessage = "It is not allowed to persist a null object";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
     void update() {
         // entity before calling the repo
         Person entity = input.mockEntity(1);
@@ -110,6 +121,16 @@ class PersonServicesTest {
         assertEquals("Last Name Test1", result.getLastName());
         assertEquals("Address Test1", result.getAddress());
         assertEquals("Female", result.getGender());
+    }
+
+    @Test
+    void updateWithNullPerson() {
+        Exception exception = assertThrows(RequiredObjectIsNullException.class, () -> {
+            service.update(null);
+        });
+        String expectedMessage = "It is not allowed to persist a null object";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 
     @Test
