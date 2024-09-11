@@ -26,6 +26,7 @@ public class PersonController {
     private PersonServices service;
 
 
+    @CrossOrigin(origins = "http://localhost:8080")
     @GetMapping(produces = {
             br.com.lelis.util.MediaType.APPLICATION_JSON,
             br.com.lelis.util.MediaType.APPLICATION_XML,
@@ -53,6 +54,7 @@ public class PersonController {
         return service.findAll();
     }
 
+    @CrossOrigin(origins = {"http://localhost:8080", "https://lelis.com.br"})
     @GetMapping(value = "/{id}",
             produces = {
                     br.com.lelis.util.MediaType.APPLICATION_JSON,
