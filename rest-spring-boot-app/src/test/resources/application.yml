@@ -1,5 +1,10 @@
 server:
   port: 8888
+security:
+  jwt:
+    token:
+      secret-key: 53cr37
+      expire-length: 3600000
 cors:
   originPatterns: http://localhost:3000,http://localhost:8080,https://lelis.com.br
 spring:
