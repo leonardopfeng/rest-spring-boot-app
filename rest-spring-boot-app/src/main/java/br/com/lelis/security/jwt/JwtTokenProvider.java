@@ -76,7 +76,7 @@ public class JwtTokenProvider {
                 .strip();
     }
 
-    public Authentication getAuthenticatin(String token){
+    public Authentication getAuthentication(String token){
         DecodedJWT decodedJWT = decodedToken(token);
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(decodedJWT.getSubject());
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
