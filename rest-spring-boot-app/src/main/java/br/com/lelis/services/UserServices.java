@@ -37,11 +37,14 @@ public class UserServices implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var user = repository.findByUsername(username);
-        if(user == null){
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
+        UserDetails user = repository.findByUsername(username);
+        System.out.println("USER + " + user.getUsername());
+        if(user != null){
+            return user;
+        }
+        else{
             throw new UsernameNotFoundException("Username " + username + " not found");
         }
-        return user;
     }
 }
