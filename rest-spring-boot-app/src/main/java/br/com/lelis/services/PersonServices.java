@@ -14,6 +14,7 @@ import br.com.lelis.mapper.DozerMapper;
 import br.com.lelis.mapper.custom.PersonMapper;
 import br.com.lelis.model.Person;
 import br.com.lelis.repositories.PersonRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -106,6 +107,26 @@ public class PersonServices {
                 .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID"));
 
         repository.delete(entity);
+    }
+
+
+    // not a default operation, so to follow the ACED rule it must have "@Transactional" annotation
+    @Transactional
+    public PersonVO disablePerson(Long id) {
+
+        logger.info("Disabling one person!");
+
+        repository.disablePerson(id);
+
+        // after disabling the person it tries to recover it from the database, if successful it shows all the info about that person
+        // including the "enabled" column
+        var entity = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID"));
+
+        var vo = DozerMapper.parseObject(entity, PersonVO.class);
+        vo.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel());
+
+        return vo;
     }
 
 }

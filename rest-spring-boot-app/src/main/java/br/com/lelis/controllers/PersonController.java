@@ -158,6 +158,35 @@ public class PersonController {
         return service.update(person);
     }
 
+
+
+    @PatchMapping(value = "/{id}",
+            produces = {
+                    br.com.lelis.util.MediaType.APPLICATION_JSON,
+                    br.com.lelis.util.MediaType.APPLICATION_XML,
+                    br.com.lelis.util.MediaType.APPLICATION_YML
+            })
+    @Operation(
+            summary = "Disables a Person",
+            description = "Disabling a specific Person by ID",
+            tags = {"People"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200",
+                            content =
+                            @Content(
+                                    schema = @Schema(implementation = PersonVO.class)
+                            )
+                    ),
+                    @ApiResponse(description = "No content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Bad request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Not found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Internal error", responseCode = "500", content = @Content)
+            })
+    public PersonVO disablePerson(@PathVariable(value = "id") Long id) {
+        return service.disablePerson(id);
+    }
+
     @DeleteMapping(value = "/{id}")
     @Operation(
             summary = "Deletes a person",
