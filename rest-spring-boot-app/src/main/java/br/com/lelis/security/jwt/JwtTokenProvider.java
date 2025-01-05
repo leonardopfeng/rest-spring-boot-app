@@ -22,6 +22,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Service
 public class JwtTokenProvider {
@@ -36,6 +37,8 @@ public class JwtTokenProvider {
     private UserDetailsService userDetailsService;
 
     Algorithm algorithm = null;
+
+    private final Logger logger = Logger.getLogger(JwtTokenProvider.class.getName());
 
     @PostConstruct
     protected void init(){
@@ -110,14 +113,18 @@ public class JwtTokenProvider {
         return null;
     }
 
-    public Boolean validateToken(String token){
-        DecodedJWT decodedJWT = decodedToken(token);
+    public Boolean validateToken(String token) {
         try {
-            // returns false if token is expired
-            return !decodedJWT.getExpiresAt().before(new Date());
-        }catch (Exception e){
-            throw new InvalidJwtAuthenticationException("Expired or invalid JWT token");
+            DecodedJWT decodedJWT = decodedToken(token);
+            if (decodedJWT.getExpiresAt().before(new Date())) {
+                throw new InvalidJwtAuthenticationException("Token expirado!");
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
         }
-
     }
+
+
+
 }

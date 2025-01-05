@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,18 +23,27 @@ public class JwtTokenFilter extends GenericFilterBean {
     }
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        // get tokens from the request
-        String token = tokenProvider.resolveToken((HttpServletRequest) servletRequest);
-        // validates token
-        if(token != null && tokenProvider.validateToken(token)){
-            // gets the authentication and checks if it exists
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+            throws IOException, ServletException {
+
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+
+        // Obtém o token do cabeçalho Authorization
+        String token = tokenProvider.resolveToken(request);
+        System.out.println("Token = "  + token);
+
+        if (token != null && tokenProvider.validateToken(token)) {
+            // Se o token for válido, obtém a autenticação e a armazena no contexto do Spring Security
             Authentication auth = tokenProvider.getAuthentication(token);
-            // if it doesn't, sets the auth in the spring context
-            if(auth != null){
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            }
+            SecurityContextHolder.getContext().setAuthentication(auth);
+        } else if (token != null) {
+            // Se o token for inválido ou expirado, retorna um erro 401 (não autorizado)
+            ((HttpServletResponse) servletResponse).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inválido ou expirado");
+            return; // Impede que o filtro continue para as próximas etapas
         }
+
+        // Caso contrário, continua o fluxo normal da requisição
         filterChain.doFilter(servletRequest, servletResponse);
     }
 }
+

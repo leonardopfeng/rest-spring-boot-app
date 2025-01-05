@@ -1,6 +1,8 @@
 package br.com.lelis.integrationtests.controller.json;
 
 import br.com.lelis.config.TestConfigs;
+import br.com.lelis.data.vo.security.AccountCredentialsVO;
+import br.com.lelis.data.vo.security.TokenVO;
 import br.com.lelis.integrationtests.testcontainers.AbstractIntegrationTest;
 import br.com.lelis.integrationtests.vo.PersonVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -13,6 +15,7 @@ import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.JsonMappingException;
 
 import static io.restassured.RestAssured.given;
 
@@ -33,24 +36,54 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
         person = new PersonVO();
     }
 
+    @Test
+    @Order(0)
+    public void authorization() throws JsonProcessingException, JsonMappingException{
+        AccountCredentialsVO user = new AccountCredentialsVO("leandro", "admin123");
+
+        var accessToken = given()
+                .basePath("/auth/signin")
+                .port(TestConfigs.SERVER_PORT)
+                .contentType(TestConfigs.CONTENT_TYPE_JSON)
+                .body(user)
+                .when()
+                .post()
+                .then()
+                    .statusCode(200)
+                    .extract()
+                    .body()
+                        .as(TokenVO.class)
+                .getAccessToken();
+
+        System.out.println("Access Token: " + accessToken);
+
+
+        specification = new RequestSpecBuilder()
+                .addHeader(TestConfigs.HEADER_PARAM_AUTHORIZATION, "Bearer " + accessToken)
+                .setBasePath("/api/person/v2")
+                .setPort(TestConfigs.SERVER_PORT)
+                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
+                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+                .build();
+
+        given()
+                .spec(specification)
+                .when()
+                .get()
+                .then()
+                    .statusCode(200);
+    }
+
 
     @Test
     @Order(1)
     public void testCreate() throws JsonProcessingException {
         mockPerson();
 
-        specification = new RequestSpecBuilder()
-                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LELIS)
-                .setBasePath("/api/person/v1")
-                .setPort(TestConfigs.SERVER_PORT)
-                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
-                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
-                .build();
-
-
         var content =given()
                 .spec(specification)
                 .contentType(TestConfigs.CONTENT_TYPE_JSON)
+                .header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LELIS)
                     .body(person)
                         .when()
                             .post()
@@ -82,18 +115,10 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
     public void testCreateWithWrongOrigin() throws JsonProcessingException {
         mockPerson();
 
-        specification = new RequestSpecBuilder()
-                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_SILEL)
-                .setBasePath("/api/person/v1")
-                .setPort(TestConfigs.SERVER_PORT)
-                .addFilter(new RequestLoggingFilter(LogDetail.ALL))
-                .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
-                .build();
-
-
         var content =given()
                 .spec(specification)
                 .contentType(TestConfigs.CONTENT_TYPE_JSON)
+                .header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_SILEL)
                     .body(person)
                         .when()
                             .post()
