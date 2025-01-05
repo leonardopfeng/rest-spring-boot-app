@@ -1,9 +1,9 @@
 package br.com.lelis.integrationtests.controller.json;
 
 import br.com.lelis.config.TestConfigs;
-import br.com.lelis.data.vo.security.AccountCredentialsVO;
 import br.com.lelis.data.vo.security.TokenVO;
 import br.com.lelis.integrationtests.testcontainers.AbstractIntegrationTest;
+import br.com.lelis.integrationtests.vo.AccountCredentialsVO;
 import br.com.lelis.integrationtests.vo.PersonVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -16,12 +16,11 @@ import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.JsonMappingException;
-
 import static io.restassured.RestAssured.given;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class PersonControllerJsonTest extends AbstractIntegrationTest {
+public class PersonControllerJsonTest{
 
     private static RequestSpecification specification;
     private static ObjectMapper objectMapper;
