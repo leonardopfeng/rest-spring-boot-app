@@ -76,6 +76,36 @@ public class PersonControllerJsonTest{
 
     @Test
     @Order(1)
+    public void testDisabledPersonById() throws JsonMappingException, JsonProcessingException{
+        var content = given()
+                .spec(specification)
+                .contentType(TestConfigs.CONTENT_TYPE_JSON)
+                .pathParam("id", person.getId())
+                .when()
+                .patch("{id}")
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString();
+
+        PersonVO persistedPerson = objectMapper.readValue(content, PersonVO.class);
+        person = persistedPerson;
+
+        Assertions.assertNotNull(persistedPerson);
+
+        Assertions.assertNotNull(persistedPerson.getId());
+        Assertions.assertNotNull(persistedPerson.getFirstName());
+        Assertions.assertNotNull(persistedPerson.getLastName());
+        Assertions.assertNotNull(persistedPerson.getAddress());
+        Assertions.assertNotNull(persistedPerson.getGender());
+        Assertions.assertTrue(persistedPerson.isEnabled());
+
+        Assertions.assertEquals(persistedPerson.getId(), person.getId());
+    }
+
+    @Test
+    @Order(2)
     public void testCreate() throws JsonProcessingException {
         mockPerson();
 
@@ -100,17 +130,12 @@ public class PersonControllerJsonTest{
         Assertions.assertEquals("New York - NY", createdPerson.getAddress());
         Assertions.assertEquals("male",createdPerson.getGender());
         Assertions.assertTrue(createdPerson.getId() > 0);
-    }
+        Assertions.assertTrue(createdPerson.isEnabled());
 
-    private void mockPerson() {
-        person.setFirstName("Richard");
-        person.setLastName("Stallman");
-        person.setAddress("New York - NY");
-        person.setGender("male");
     }
 
     @Test
-    @Order(2)
+    @Order(3)
     public void testCreateWithWrongOrigin() throws JsonProcessingException {
         mockPerson();
 
@@ -130,5 +155,13 @@ public class PersonControllerJsonTest{
 
         Assertions.assertNotNull(content);
         Assertions.assertEquals("Invalid CORS request", content);
+    }
+
+    private void mockPerson() {
+        person.setFirstName("Richard");
+        person.setLastName("Stallman");
+        person.setAddress("New York - NY");
+        person.setGender("male");
+        person.setEnabled(true);
     }
 }
