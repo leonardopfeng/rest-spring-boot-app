@@ -18,6 +18,10 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -33,8 +37,11 @@ public class PersonServices {
     PersonRepository repository;
 
     @Autowired
+    PagedResourcesAssembler<PersonVO> assembler;
+
+    @Autowired
     PersonMapper mapper;
-    public Page<PersonVO> findAll(Pageable pageable) {
+    public PagedModel<EntityModel<PersonVO>> findAll(Pageable pageable) {
 
         logger.info("Finding all people!");
 
@@ -48,7 +55,13 @@ public class PersonServices {
                 )
         );
 
-        return personVosPage;
+        Link link = linkTo(methodOn(PersonController.class).findAll(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                "ASC")
+        ).withSelfRel();
+
+        return assembler.toModel(personVosPage, link);
     }
 
     public PersonVO findById(Long id) {
