@@ -16,6 +16,9 @@ import br.com.lelis.model.Person;
 import br.com.lelis.repositories.PersonRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -31,16 +34,21 @@ public class PersonServices {
 
     @Autowired
     PersonMapper mapper;
-    public List<PersonVO> findAll() {
+    public Page<PersonVO> findAll(Pageable pageable) {
 
         logger.info("Finding all people!");
 
-        // convert from Person to PersonVO using DozerMapper
-        var persons = DozerMapper.parseListObjects(repository.findAll(), PersonVO.class);
-        persons
-                .stream()
-                .forEach(p -> p.add(linkTo(methodOn(PersonController.class).findById(p.getKey())).withSelfRel()));
-        return persons;
+        // using paging to prevent performing problems
+        var personPage = repository.findAll(pageable);
+        var personVosPage = personPage.map(p -> DozerMapper.parseObject(p, PersonVO.class));
+
+        personVosPage.map(
+                p -> p.add(
+                        linkTo(methodOn(PersonController.class).findById(p.getKey())).withSelfRel()
+                )
+        );
+
+        return personVosPage;
     }
 
     public PersonVO findById(Long id) {

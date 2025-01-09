@@ -13,6 +13,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,8 +53,12 @@ public class PersonController {
                 @ApiResponse(description = "Not found", responseCode = "404", content = @Content),
                 @ApiResponse(description = "Internal error", responseCode = "500", content = @Content)
     })
-    public List<PersonVO> findAll() {
-        return service.findAll();
+    public ResponseEntity<Page<PersonVO>> findAll(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "limit", defaultValue = "12") Integer limit
+    ) {
+        Pageable pageable = PageRequest.of(page, limit);
+        return ResponseEntity.ok(service.findAll(pageable));
     }
 
     @CrossOrigin(origins = {"http://localhost:8080", "https://lelis.com.br"})
